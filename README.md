@@ -1,6 +1,6 @@
 # Cronômetro
 
-Cronômetro simples feito de zero para praticar React Native
+Cronômetro simples feito do zero para praticar React Native
 
 ### Execução
 
