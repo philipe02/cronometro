@@ -21,21 +21,26 @@ export default function App() {
       setEstado(true);
     }
   };
-  const zerarMiliseg = () => {
-    setMiliSeg(0);
+  const completarMiliseg = () => {
+    setMiliSeg(9);
   };
-  const zerarSegundos = () => {
+  const completarSegundos = () => {
+    setSegundos(10);
+  };
+  const setTimerMin = (tempo) => {
+    setMinutos(tempo);
     setSegundos(0);
+    setMiliSeg(0);
+  }
+  const decrementar = () => {
+    if (estado) 
+      setMiliSeg(miliSeg-1);
   };
-
-  const incrementar = () => {
-    if (estado) setMiliSeg(miliSeg + 1);
+  const decrementarSeg = () => {
+    setSegundos(segundos - 1);
   };
-  const incrementarSeg = () => {
-    setSegundos(segundos + 1);
-  };
-  const incrementarMin = () => {
-    setMinutos(minutos + 1);
+  const decrementarMin = () => {
+    setMinutos(minutos - 1);
   };
 
   let limparTimer = () => {
@@ -54,21 +59,29 @@ export default function App() {
     return numFormatado;
   };
   useEffect(() => {
-    if (segundos >= 59) {
-      zerarSegundos();
-      incrementarMin();
+    if (segundos <= 0 && estado) {
+      completarSegundos();
+      decrementarMin();
     }
   }, [segundos]);
   useEffect(() => {
-    if (miliSeg >= 9) {
-      zerarMiliseg();
-      incrementarSeg();
+    if (miliSeg <= 0 && estado)  {
+      completarMiliseg();
+      decrementarSeg();
     }
   }, [miliSeg]);
+  useEffect(() => {
+    if (minutos < 0) {
+      setEstado(false)
+      setMinutos(0);
+      setSegundos(0);
+      setMiliSeg(0);
+    }
+  }, [minutos])
 
   useEffect(() => {
     let timer = setInterval(() => {
-      incrementar();
+      decrementar();
     }, 50);
     return () => clearInterval(timer);
   });
@@ -87,6 +100,17 @@ export default function App() {
           <Text style={styles.botaoTimer}>Limpar</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.containerBotaoTempo}>
+        <TouchableOpacity style={styles.botao} onPress={() => setTimerMin(1)}>
+          <Text style={styles.botaoTimer}>1 min</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.botao} onPress={() => setTimerMin(5)}>
+          <Text style={styles.botaoTimer}>5 min</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.botao} onPress={() => setTimerMin(10)}>
+          <Text style={styles.botaoTimer}>10 min</Text>
+        </TouchableOpacity>
+      </View>
       <StatusBar style="auto" />
     </SafeAreaView>
   );
@@ -101,6 +125,13 @@ const styles = StyleSheet.create({
   },
   containerBotao: {
     width: 300,
+    alignItems: "center",
+    justifyContent: "space-around",
+    flexDirection: "row",
+  },
+  containerBotaoTempo: {
+    width: 400,
+    top: 50,
     alignItems: "center",
     justifyContent: "space-around",
     flexDirection: "row",
